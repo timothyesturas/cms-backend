@@ -9,8 +9,6 @@ export type UpdateSettingsDto = {
   siteName: string;
   tagline: string;
   primaryColor: string;
-  secondaryColor: string;
-  backgroundColor: string;
 };
 
 @Injectable()
@@ -25,8 +23,6 @@ export class SettingsService {
         site_name AS "siteName",
         tagline,
         primary_color AS "primaryColor",
-        secondary_color AS "secondaryColor",
-        background_color AS "backgroundColor",
         updated_at AS "updatedAt"
       FROM site_settings
       WHERE id = 1
@@ -52,25 +48,19 @@ export class SettingsService {
         site_name,
         tagline,
         primary_color,
-        secondary_color,
-        background_color,
         updated_at
       )
-      VALUES (1, $1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
+      VALUES (1, $1, $2, $3, CURRENT_TIMESTAMP)
       ON CONFLICT (id)
       DO UPDATE SET
         site_name = EXCLUDED.site_name,
         tagline = EXCLUDED.tagline,
         primary_color = EXCLUDED.primary_color,
-        secondary_color = EXCLUDED.secondary_color,
-        background_color = EXCLUDED.background_color,
         updated_at = CURRENT_TIMESTAMP
       RETURNING
         site_name AS "siteName",
         tagline,
         primary_color AS "primaryColor",
-        secondary_color AS "secondaryColor",
-        background_color AS "backgroundColor",
         updated_at AS "updatedAt"
     `;
 
@@ -78,8 +68,6 @@ export class SettingsService {
       settings.siteName.trim(),
       settings.tagline.trim(),
       settings.primaryColor,
-      settings.secondaryColor,
-      settings.backgroundColor,
     ]);
 
     return result.rows[0];
@@ -107,8 +95,6 @@ export class SettingsService {
 
     const colors = [
       settings.primaryColor,
-      settings.secondaryColor,
-      settings.backgroundColor,
     ];
 
     if (

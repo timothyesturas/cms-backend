@@ -9,6 +9,10 @@ export type UpdateSettingsDto = {
   siteName: string;
   tagline: string;
   primaryColor: string;
+  slogan1: string;
+  slogan2: string;
+  heroImageUrl: string;
+  logoUrl: string;
 };
 
 @Injectable()
@@ -23,6 +27,10 @@ export class SettingsService {
         site_name AS "siteName",
         tagline,
         primary_color AS "primaryColor",
+        slogan1,
+        slogan2,
+        hero_image_url AS "heroImageUrl",
+        logo_url AS "logoUrl",
         updated_at AS "updatedAt"
       FROM site_settings
       WHERE id = 1
@@ -48,19 +56,31 @@ export class SettingsService {
         site_name,
         tagline,
         primary_color,
+        slogan1,
+        slogan2,
+        hero_image_url,
+        logo_url,
         updated_at
       )
-      VALUES (1, $1, $2, $3, CURRENT_TIMESTAMP)
+      VALUES (1, $1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
       ON CONFLICT (id)
       DO UPDATE SET
         site_name = EXCLUDED.site_name,
         tagline = EXCLUDED.tagline,
         primary_color = EXCLUDED.primary_color,
+        slogan1 = EXCLUDED.slogan1,
+        slogan2 = EXCLUDED.slogan2,
+        hero_image_url = EXCLUDED.hero_image_url,
+        logo_url = EXCLUDED.logo_url,
         updated_at = CURRENT_TIMESTAMP
       RETURNING
         site_name AS "siteName",
         tagline,
         primary_color AS "primaryColor",
+        slogan1,
+        slogan2,
+        hero_image_url AS "heroImageUrl",
+        logo_url AS "logoUrl",
         updated_at AS "updatedAt"
     `;
 
@@ -68,6 +88,10 @@ export class SettingsService {
       settings.siteName.trim(),
       settings.tagline.trim(),
       settings.primaryColor,
+      settings.slogan1,
+      settings.slogan2,
+      settings.heroImageUrl,
+      settings.logoUrl,
     ]);
 
     return result.rows[0];
@@ -92,7 +116,6 @@ export class SettingsService {
         'Tagline must be at most 255 characters.',
       );
     }
-
     const colors = [
       settings.primaryColor,
     ];

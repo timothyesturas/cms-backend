@@ -4,22 +4,15 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
+import { UpdateSettingsDto } from './UpdateSettingsDto';
 
-export type UpdateSettingsDto = {
-  siteName: string;
-  tagline: string;
-  primaryColor: string;
-  slogan1: string;
-  slogan2: string;
-  heroImageUrl: string;
-  logoUrl: string;
-};
+
 
 @Injectable()
 export class SettingsService {
   constructor(
     private readonly databaseService: DatabaseService,
-  ) {}
+  ) { }
 
   async findOne() {
     const sql = `
@@ -33,7 +26,6 @@ export class SettingsService {
         logo_url AS "logoUrl",
         updated_at AS "updatedAt"
       FROM site_settings
-      WHERE id = 1
     `;
 
     const result = await this.databaseService.query(sql);
@@ -51,45 +43,34 @@ export class SettingsService {
     this.validateSettings(settings);
 
     const sql = `
-      INSERT INTO site_settings (
-        id,
-        site_name,
-        tagline,
-        primary_color,
-        slogan1,
-        slogan2,
-        hero_image_url,
-        logo_url,
-        updated_at
-      )
-      VALUES (1, $1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
-      ON CONFLICT (id)
-      DO UPDATE SET
-        site_name = EXCLUDED.site_name,
-        tagline = EXCLUDED.tagline,
-        primary_color = EXCLUDED.primary_color,
-        slogan1 = EXCLUDED.slogan1,
-        slogan2 = EXCLUDED.slogan2,
-        hero_image_url = EXCLUDED.hero_image_url,
-        logo_url = EXCLUDED.logo_url,
-        updated_at = CURRENT_TIMESTAMP
-      RETURNING
-        site_name AS "siteName",
-        tagline,
-        primary_color AS "primaryColor",
-        slogan1,
-        slogan2,
-        hero_image_url AS "heroImageUrl",
-        logo_url AS "logoUrl",
-        updated_at AS "updatedAt"
-    `;
+    UPDATE site_settings
+    SET
+      site_name = $1,
+      tagline = $2,
+      primary_color = $3,
+      slogan1 = $4,
+      slogan2 = $5,
+      hero_image_url = $6,
+      logo_url = $7,
+      updated_at = CURRENT_TIMESTAMP
+    RETURNING
+      id,
+      site_name AS "siteName",
+      tagline,
+      primary_color AS "primaryColor",
+      slogan1,
+      slogan2,
+      hero_image_url AS "heroImageUrl",
+      logo_url AS "logoUrl",
+      updated_at AS "updatedAt"
+  `;
 
     const result = await this.databaseService.query(sql, [
       settings.siteName.trim(),
       settings.tagline.trim(),
       settings.primaryColor,
-      settings.slogan1,
-      settings.slogan2,
+      settings.slogan1.trim(),
+      settings.slogan2.trim(),
       settings.heroImageUrl,
       settings.logoUrl,
     ]);

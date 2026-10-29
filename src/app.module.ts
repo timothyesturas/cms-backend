@@ -6,6 +6,7 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ProgramsModule } from './programs/programs.module';
 import { SettingsModule } from "./settings/settings.module";
+import { NavigationModule } from "./navigation/navigation.module";
 
 
 @Module({
@@ -16,7 +17,8 @@ import { SettingsModule } from "./settings/settings.module";
     DatabaseModule,
     MenusModule,
     ProgramsModule,
-    SettingsModule
+    SettingsModule,
+    NavigationModule
   ],
   controllers: [AppController],
   providers: [AppService],

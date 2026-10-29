@@ -19,7 +19,7 @@ import { randomUUID } from 'crypto';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { SettingsService } from './settings.service';
-import type { UpdateSettingsDto } from './settings.service';
+import type { UpdateSettingsDto } from './UpdateSettingsDto';
 const uploadDirectory = join(process.cwd(), 'uploads');
 
 const allowedMimeTypes: Record<string, string> = {
